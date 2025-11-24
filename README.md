@@ -6,14 +6,17 @@ An AI-powered auto insurance claim processing system built with Streamlit, Llama
 
 ### Core Functionality
 - **Web-based Interface**: Clean, intuitive Streamlit UI for claim processing
-- **AI-Powered Analysis**: GPT-4 integration for intelligent claim evaluation
-- **Policy Document Retrieval**: LlamaCloud integration for policy indexing and search
+- **Agentic AI Reasoning**: Gemini 2.5 Flash orchestrates FNOL intelligence, triage, fraud scanning, and settlement drafting
+- **Policy Document Retrieval**: (Optional) hook for LlamaCloud or local retrieval to ground coverage decisions
 - **Structured Decision Making**: Comprehensive claim evaluation with detailed reasoning
 - **Real-time Processing**: Asynchronous workflow with live progress tracking
 
 ### Advanced Capabilities
 - **Event-Driven Workflow**: Multi-step processing pipeline with clear event handling
-- **Policy Document Integration**: Automatic retrieval of relevant policy sections
+- **FNOL Intelligence Agent**: Summarizes intake narrative, severity, and next best actions
+- **Smart Triage Agent**: Assigns adjusters, service levels, and workload routing
+- **Fraud Radar Agent**: Generates SIU signals before settlement
+- **Coverage Brain Agent**: Aligns policy sections, deductibles, and payouts
 - **Declarations Page Processing**: Individual policy holder information analysis
 - **Metadata Filtering**: Policy-specific document retrieval and analysis
 - **Comprehensive Logging**: Detailed processing steps with verbose mode
@@ -27,7 +30,7 @@ An AI-powered auto insurance claim processing system built with Streamlit, Llama
 ## 🛠️ Technology Stack
 
 - **Frontend**: Streamlit
-- **AI/ML**: OpenAI GPT-4, LlamaIndex, LlamaCloud
+- **AI/ML**: Gemini 2.5 Flash (via Google Generative AI), LlamaIndex runtime, optional LlamaCloud for retrieval
 - **Data Processing**: Pydantic, AsyncIO
 - **Language**: Python 3.13+
 - **Document Processing**: LlamaParse
@@ -38,6 +41,24 @@ An AI-powered auto insurance claim processing system built with Streamlit, Llama
 - Python 3.10 or higher
 - OpenAI API key (optional, for AI features)
 - LlamaCloud API key (optional, for document retrieval)
+
+## 🧠 Agentic Opportunities Across The Claim Journey
+
+| Journey Stage | Pain Today | Agentic Opportunity |
+| --- | --- | --- |
+| **FNOL Intake** | Free-form narratives require manual summarization | FNOL Intelligence agent normalizes facts, severity, and required evidence |
+| **Triage & Assignment** | Work routing depends on adjuster experience | Smart Triage agent scores priority, matches adjuster persona, and sets SLA |
+| **Investigation & Adjudication** | Policy lookup + fraud checks split across systems | Coverage Brain agent composes policy queries, while Fraud Radar agent pre-screens anomalies |
+| **Settlement & Payout** | Decisions stored in static notes | Recommendation agent returns structured deductible/payout package for downstream systems |
+
+## 🎯 MVP Scope & Prioritization
+
+1. **FNOL Intelligence (Must-Have)** – unlocks instant understanding for every intake call, enabling downstream automation.
+2. **Smart Triage (Must-Have)** – ensures carriers see value fast via better workload routing + SLA commitments.
+3. **Fraud Radar (Should-Have)** – lightweight SIU signal that can plug into existing queues without new tooling.
+4. **Coverage Brain (Must-Have)** – converts the above insights into actionable settlement instructions.
+
+These four agents form the MVP because they touch every stakeholder: intake specialists, adjusters, SIU leads, and claims managers. Additional document retrieval integrations remain optional extensions.
 
 ### Setup
 1. **Clone the repository**
@@ -51,10 +72,10 @@ An AI-powered auto insurance claim processing system built with Streamlit, Llama
    pip install -r requirements.txt
    ```
 
-3. **Set up environment variables** (optional)
+3. **Set up environment variables**
    ```bash
-   export OPENAI_API_KEY="your-openai-api-key"
-   export LLAMA_CLOUD_API_KEY="your-llama-cloud-api-key"
+   export GEMINI_API_KEY="your-google-ai-studio-key"
+   # optional: export LLAMA_CLOUD_API_KEY for managed retrieval
    ```
 
 4. **Run the application**
@@ -72,15 +93,15 @@ An AI-powered auto insurance claim processing system built with Streamlit, Llama
 ### Basic Usage
 1. **Access the web interface** at `http://localhost:8501`
 2. **Select a claim file** from the dropdown or upload your own JSON file
-3. **Configure AI settings** in the sidebar (optional)
-4. **Click "Process Claim"** to analyze the claim
-5. **Review the results** including coverage decision, deductible, and recommended payout
+3. **Optionally enable Gemini Agentic AI** with your API key for live reasoning
+4. **Click "Process Claim"** to watch FNOL → Triage → Fraud → Settlement agents run
+5. **Review the results** including coverage decision, deductible, recommended payout, severity, triage plan, and SIU signals
 
-### AI-Enhanced Mode
-1. **Enable "Use Real AI Analysis"** in the sidebar
-2. **Enter your API keys** for OpenAI and LlamaCloud
-3. **Enable verbose mode** to see detailed processing steps
-4. **Process claims** with full AI-powered analysis
+### Agentic Mode (Gemini)
+1. **Enable "Use Gemini Agentic AI"** in the sidebar
+2. **Enter your Google AI Studio key** (Gemini 2.5 Flash)
+3. **Toggle verbose mode** to stream every workflow step
+4. **Process claims** with live FNOL summaries, routing, fraud checks, and coverage reasoning
 
 ## 📁 Project Structure
 
@@ -157,14 +178,17 @@ mypy workflow.py
 
 ## 📈 Workflow Architecture
 
-The application follows an event-driven architecture with the following steps:
+The event-driven workflow now mirrors the carrier journey:
 
-1. **Load Claim Info** → Parse and validate claim JSON data
-2. **Generate Policy Queries** → AI-generated queries for policy retrieval
-3. **Retrieve Policy Text** → Fetch relevant policy sections and declarations
-4. **Generate Recommendation** → AI analysis of coverage and settlement
-5. **Finalize Decision** → Structured output with coverage determination
-6. **Output Result** → Format and display results to user
+1. **Load Claim Info** → Parse & validate FNOL JSON (Pydantic safeguards)
+2. **FNOL Intelligence Agent** → Gemini summarizes incident, impact, severity, and next actions
+3. **Smart Triage Agent** → Determines priority, adjuster persona, and target SLA
+4. **Fraud Radar Agent** → Produces SIU risk score + flags
+5. **Policy Query Agent** → Generates retrieval queries (or uses fallback library text)
+6. **Coverage Brain** → Crafts deductible + payout recommendation tied to policy section
+7. **Decision Formatter** → Surfaces claim decision alongside agentic insights in UI + API
+
+Each agent falls back to deterministic heuristics when Gemini is unavailable, ensuring the prototype always runs.
 
 ## 🔮 Future Enhancements
 
@@ -173,6 +197,12 @@ The application follows an event-driven architecture with the following steps:
 - **Integration APIs**: REST API for external system integration
 - **Multi-language Support**: Internationalization capabilities
 - **Advanced Visualizations**: Interactive charts and claim analytics
+- **Adjuster Co-Pilot**: Surface recommended questions and negotiation levers during live calls
+- **Automated Repair Partnering**: Trigger DRP shop selection and digital payments
+
+## 🖼️ Presentation Deck
+
+A concise 5-slide briefing that covers agentic opportunities, MVP scope, product story, and next steps is available at `docs/presentation.md`.
 
 ## 🤝 Contributing
 
